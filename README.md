@@ -88,3 +88,11 @@ See `BRANCHING.md` for a simple workflow:
 
 ## License
 MIT — see `LICENSE`.
+
+
+<!-- ci-workflow-coverage -->
+## Continuous integration
+
+[![CI](https://github.com/abhijith-sivaprasadan/rotating-machinery-vibration-minilab/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/abhijith-sivaprasadan/rotating-machinery-vibration-minilab/actions/workflows/ci.yml)
+
+See [CI coverage and limitations](CI.md) for the automated checks. The status badge tracks the default branch.

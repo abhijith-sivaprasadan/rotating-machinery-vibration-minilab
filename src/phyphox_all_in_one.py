@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import signal, stats
+from scipy.integrate import trapezoid
 from datetime import datetime
 
 FILE_A = "Raw Data Speed 1.csv"
@@ -87,7 +88,7 @@ def band_energy(f, pxx, f1, f2):
     m = (f >= f1) & (f <= f2)
     if np.sum(m) < 2:
         return float("nan")
-    return float(np.trapz(pxx[m], f[m]))
+    return float(trapezoid(pxx[m], f[m]))
 
 def rolling_rms(x, fs, win_s=1.0):
     n = max(5, int(win_s * fs))
