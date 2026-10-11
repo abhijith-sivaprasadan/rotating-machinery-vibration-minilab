@@ -1,8 +1,7 @@
 """End-to-end FFT/report regression using explicitly synthetic analytic tones."""
 import os
 from pathlib import Path
-import subprocess
-import sys
+import runpy
 import tempfile
 
 import numpy as np
@@ -16,8 +15,18 @@ with tempfile.TemporaryDirectory(prefix="phyphox-ci-") as directory:
         pd.DataFrame({"Time (s)": time,
                       "Linear Acceleration z (m/s^2)": np.sin(2*np.pi*frequency*time)}).to_csv(
             work / f"Raw Data Speed {i}.csv", index=False)
-    subprocess.run([sys.executable, str(ROOT / "src/phyphox_all_in_one.py")],
-                   cwd=work, env=dict(os.environ, MPLBACKEND="Agg"), check=True, timeout=180)
+    original_directory = Path.cwd()
+    original_backend = os.environ.get("MPLBACKEND")
+    try:
+        os.chdir(work)
+        os.environ["MPLBACKEND"] = "Agg"
+        runpy.run_path(str(ROOT / "src/phyphox_all_in_one.py"), run_name="__main__")
+    finally:
+        os.chdir(original_directory)
+        if original_backend is None:
+            os.environ.pop("MPLBACKEND", None)
+        else:
+            os.environ["MPLBACKEND"] = original_backend
     output = work / "phyphox_full_report"
     metrics = pd.read_csv(output / "summary_metrics.csv")
     print(metrics.to_string(index=False))
